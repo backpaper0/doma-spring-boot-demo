@@ -1,23 +1,33 @@
 package com.example;
 
-import org.seasar.doma.Dao;
-import org.seasar.doma.Insert;
-import org.seasar.doma.Select;
-import org.seasar.doma.boot.ConfigAutowireable;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
-@ConfigAutowireable
-@Dao
-public interface ReservationDao {
-    @Select
-    List<Reservation> selectAll();
+import org.seasar.doma.jdbc.criteria.Entityql;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-    @Select
-    List<Reservation> selectByName(String name);
+@Component
+public class ReservationDao {
 
-    @Insert
+    private final Entityql entityql;
+
+    public ReservationDao(Entityql entityql) {
+        this.entityql = entityql;
+    }
+
+    public List<Reservation> selectAll() {
+        final Reservation_ r = new Reservation_();
+        return entityql.from(r).fetch();
+    }
+
+    public List<Reservation> selectByName(String name) {
+        final Reservation_ r = new Reservation_();
+        return entityql.from(r).where(c -> c.like(r.name, name + "%")).fetch();
+    }
+
     @Transactional
-    int insert(Reservation reservation);
+    public Reservation insert(Reservation reservation) {
+        final Reservation_ r = new Reservation_();
+        return entityql.insert(r, reservation).execute();
+    }
 }
