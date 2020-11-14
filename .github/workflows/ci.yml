@@ -5,6 +5,7 @@ on:
     paths:
     - 'src/**'
     - 'pom.xml'
+    - '.github/**'
 
 jobs:
   build:
@@ -25,9 +26,3 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn -B -e test
-      env:
-        logging_level_root: WARN
-        logging_level_org_hibernate_SQL: WARN
-        logging_level_org_hibernate_type_descriptor_sql_BasicBinder: WARN
-        logging_level_org_springframework_jdbc_core_JdbcTemplate: WARN
-        logging_level_org_springframework_jdbc_datasource_DataSourceTransactionManager: WARN
