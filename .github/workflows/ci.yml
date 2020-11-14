@@ -1,0 +1,33 @@
+name: doma-spring-boot-demo
+
+on:
+  push:
+    paths:
+    - 'src/**'
+    - 'pom.xml'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Build with Maven
+      run: mvn -B -e test
+      env:
+        logging_level_root: WARN
+        logging_level_org_hibernate_SQL: WARN
+        logging_level_org_hibernate_type_descriptor_sql_BasicBinder: WARN
+        logging_level_org_springframework_jdbc_core_JdbcTemplate: WARN
+        logging_level_org_springframework_jdbc_datasource_DataSourceTransactionManager: WARN
