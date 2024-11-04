@@ -2,22 +2,33 @@ package com.example;
 
 import java.util.List;
 
-import org.seasar.doma.Dao;
-import org.seasar.doma.Insert;
-import org.seasar.doma.Select;
-import org.seasar.doma.boot.ConfigAutowireable;
+import org.seasar.doma.jdbc.criteria.QueryDsl;
+import org.seasar.doma.jdbc.criteria.option.LikeOption;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@ConfigAutowireable
-@Dao
-public interface ReservationDao {
-	@Select
-	List<Reservation> selectAll();
+@Component
+public class ReservationDao {
 
-	@Select
-	List<Reservation> selectByName(String name);
+    private final QueryDsl queryDsl;
 
-	@Insert
-	@Transactional
-	int insert(Reservation reservation);
+    public ReservationDao(QueryDsl queryDsl) {
+        this.queryDsl = queryDsl;
+    }
+
+    public List<Reservation> selectAll() {
+        var r = new Reservation_();
+        return queryDsl.from(r).fetch();
+    }
+
+    public List<Reservation> selectByName(String name) {
+        var r = new Reservation_();
+        return queryDsl.from(r).where(c -> c.like(r.name, name, LikeOption.prefix())).fetch();
+    }
+
+    @Transactional
+    public int insert(Reservation reservation) {
+        var r = new Reservation_();
+        return queryDsl.insert(r).single(reservation).execute().getCount();
+    }
 }
