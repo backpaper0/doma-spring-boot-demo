@@ -17,8 +17,8 @@
 
     <properties>
         <java.version>21</java.version>
-        <doma-spring-boot.version>2.1.0</doma-spring-boot.version>
-        <doma.version>3.4.0</doma.version>
+        <doma-spring-boot.version>2.2.0</doma-spring-boot.version>
+        <doma.version>3.5.1</doma.version>
     </properties>
 
     <dependencies>
