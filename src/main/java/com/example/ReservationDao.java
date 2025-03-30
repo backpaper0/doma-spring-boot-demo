@@ -7,11 +7,13 @@ import org.seasar.doma.Insert;
 import org.seasar.doma.Script;
 import org.seasar.doma.Select;
 import org.seasar.doma.boot.ConfigAutowireable;
+import org.seasar.doma.jdbc.Result;
 import org.springframework.transaction.annotation.Transactional;
 
 @ConfigAutowireable
 @Dao
 public interface ReservationDao {
+
 	@Select
 	List<Reservation> selectAll();
 
@@ -20,8 +22,9 @@ public interface ReservationDao {
 
 	@Insert
 	@Transactional
-	int insert(Reservation reservation);
+	Result<Reservation> insert(Reservation reservation);
 
 	@Script
 	void createTables();
+
 }

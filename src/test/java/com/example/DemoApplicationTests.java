@@ -1,42 +1,68 @@
 package com.example;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.net.URI;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClient;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class DemoApplicationTests {
 
-    @Autowired
-    TestRestTemplate http;
+	RestClient http;
 
-    @Test
-    void all() {
-        final ResponseEntity<List<Reservation>> response = http.exchange(
-                RequestEntity.get(URI.create("/")).build(),
-                new ParameterizedTypeReference<List<Reservation>>() {
-                });
-        final List<Reservation> entities = response.getBody();
-        assertEquals(4, entities.size());
-    }
+	@LocalServerPort
+	int port;
 
-    @Test
-    void name() {
-        final ResponseEntity<List<Reservation>> response = http.exchange(
-                RequestEntity.get(URI.create("/?name=spring")).build(),
-                new ParameterizedTypeReference<List<Reservation>>() {
-                });
-        final List<Reservation> entities = response.getBody();
-        assertEquals(3, entities.size());
-    }
+	@BeforeEach
+	void setUp(@Autowired RestClient.Builder builder) {
+		this.http = builder.baseUrl("http://localhost:" + port).build();
+	}
+
+	@Test
+	void all() {
+		final List<Reservation> entities = http.get()
+			.retrieve()
+			.body(new ParameterizedTypeReference<List<Reservation>>() {
+			});
+		assertEquals(4, entities.size());
+	}
+
+	@Test
+	void name() {
+		final List<Reservation> entities = http.get()
+			.uri(builder -> builder.queryParam("name", "spring").build())
+			.retrieve()
+			.body(new ParameterizedTypeReference<List<Reservation>>() {
+			});
+		assertEquals(3, entities.size());
+	}
+
+	@Test
+	void allByUnifiedCriteria() {
+		final List<Reservation> entities = http.get()
+			.uri(builder -> builder.path("uc").build())
+			.retrieve()
+			.body(new ParameterizedTypeReference<List<Reservation>>() {
+			});
+		assertEquals(4, entities.size());
+	}
+
+	@Test
+	void nameByUnifiedCriteria() {
+		final List<Reservation> entities = http.get()
+			.uri(builder -> builder.path("uc").queryParam("name", "spring").build())
+			.retrieve()
+			.body(new ParameterizedTypeReference<List<Reservation>>() {
+			});
+		assertEquals(3, entities.size());
+	}
+
 }
