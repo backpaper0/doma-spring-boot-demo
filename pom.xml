@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <doma-spring-boot.version>2.3.0</doma-spring-boot.version>
+        <doma-spring-boot.version>2.4.0</doma-spring-boot.version>
         <doma.version>3.6.0</doma.version>
     </properties>
 
