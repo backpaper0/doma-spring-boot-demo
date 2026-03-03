@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0-RC2</version>
+        <version>4.0.0</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <doma-spring-boot.version>3.0.0-SNAPSHOT</doma-spring-boot.version>
+        <doma-spring-boot.version>3.0.0</doma-spring-boot.version>
         <doma.version>3.11.0</doma.version>
     </properties>
 
